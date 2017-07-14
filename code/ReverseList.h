@@ -43,16 +43,20 @@ ListNode* ReverseList1(ListNode* phead)
 	assert(phead);
 	ListNode* cur = phead->_next;
 	ListNode* next = NULL;
-	while (cur->_next)
+	while (cur && cur->_next)
 	{
 		next = cur->_next;
 		cur->_next = next->_next;
 		next->_next = phead->_next;
 		phead->_next = next;
 	}
-	cur->_next = phead;
-	phead = cur->_next->_next;
-	cur->_next->_next = NULL;
+	if (cur && cur->_next)
+	{
+		cur->_next = phead;
+		phead = cur->_next->_next;
+		cur->_next->_next = NULL;
+	}
+	
 	return phead;
 }
 
@@ -67,6 +71,8 @@ void RListTest()
 	ListNode* Node3 = new ListNode(7);
 	Node2->_next = Node3;
 	Node3->_next = NULL;
-	ListNode* head = ReverseList1(phead1);
+	ListNode* Node = new ListNode(0);
+	Node->_next = NULL;
+	ListNode* head = ReverseList1(Node);
 }
 
