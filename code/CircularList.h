@@ -29,6 +29,35 @@ bool IsExitLoop(ListNode* phead)
 	return !((fast == NULL) || (fast->_next == NULL));
 }
 
+//第一次相遇时开始计时，第二次相遇时，即为环长度
+int CircularLength(ListNode* phead)
+{
+	if (!IsExitLoop(phead)) //如果不带环，环的长度为0
+		return 0;
+	ListNode* fast = phead;
+	ListNode* slow = phead;
+	bool first = false;
+	bool second = false;
+	int len = 0;
+	while (1)
+	{
+		fast = fast->_next->_next;
+		slow = slow->_next;
+
+		if (fast == slow && second == true)//第二次相遇跳出循环
+			break;
+
+		if (fast == slow && first == false)//第一次相遇,开始计数
+		{
+			first = true;
+			second = true;
+		}
+		if(first == true)
+			++len;
+	}
+	return len;
+}
+
 void CircularListTest()
 {
 	ListNode* phead1 = new ListNode(1);
@@ -38,6 +67,7 @@ void CircularListTest()
 	Node1->_next = Node2;
 	ListNode* Node3 = new ListNode(7);
 	Node2->_next = Node3;
-	Node3->_next = NULL;
+	Node3->_next = Node1;
 	cout<<IsExitLoop(phead1)<<endl;
+	cout << "len = " << CircularLength(phead1) << endl;
 }
