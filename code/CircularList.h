@@ -58,6 +58,31 @@ int CircularLength(ListNode* phead)
 	return len;
 }
 
+//环的入口点   相遇点到入口点的距离等于头结点到入口点的距离
+ListNode* FindEntrance(ListNode* phead)
+{
+	ListNode* fast = phead;
+	ListNode* slow = phead;
+	while (fast && fast->_next)
+	{
+		fast = fast->_next->_next;
+		slow = slow->_next;
+		if (fast == slow)
+			break;
+	}
+	if (fast == NULL && fast->_next == NULL)
+		return NULL;
+	
+	//走到相遇点
+	fast = phead;
+	while (fast != slow)
+	{
+		fast = fast->_next;
+		slow = slow->_next;
+	}
+	return slow;
+}
+
 void CircularListTest()
 {
 	ListNode* phead1 = new ListNode(1);
@@ -70,4 +95,5 @@ void CircularListTest()
 	Node3->_next = Node1;
 	cout<<IsExitLoop(phead1)<<endl;
 	cout << "len = " << CircularLength(phead1) << endl;
+	cout << FindEntrance(phead1)->_value << endl;
 }
