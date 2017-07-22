@@ -1,5 +1,6 @@
 #pragma once
 #include<iostream>
+#include<assert.h>
 using namespace std;
 
 //求叶子节点的个数
@@ -37,6 +38,17 @@ void GetLeafSize(Node* root, size_t& count)
 	GetLeafSize(root->_right, count);
 }
 
+//第K层的节点数
+size_t GetKLevelSize(Node* root, size_t k)
+{
+	assert(k > 0);
+	if (root == NULL)
+		return 0;
+	if (k == 1)
+		return 1;
+	return GetKLevelSize(root->_left, k - 1) + GetKLevelSize(root->_right, k - 1);
+}
+
 Node* CreateTree(int* a, size_t n, size_t& index)
 {
 	if (index < n && a[index] != '#')
@@ -58,5 +70,6 @@ void LeafSizeTest()
 	cout << GetLeafSize(root) << endl;
 	GetLeafSize(root, count);
 	cout << count << endl;
+	cout << GetKLevelSize(root, 3) << endl;
 
 }
