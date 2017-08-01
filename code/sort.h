@@ -98,14 +98,80 @@ void HeapSort(int* arr, int len)
 		AdjustDown(arr,i, 0);
 	}
 }
+
+//冒泡排序
+void BubbleSort(int* arr, int len)
+{
+	assert(arr);
+	assert(len > 0);
+	for (int i = len; i > 0; i--)
+	{
+		for (int j = 1; j < i; j++)
+		{
+			if (arr[j] < arr[j - 1])
+				swap(arr[j], arr[j - 1]);
+		}
+	}
+}
+
+void BubbleSort1(int* arr, int len)
+{
+	assert(arr);
+	assert(len);
+	bool flag = 1;
+	for (int i = len; flag; i--)
+	{
+		flag = 0;
+		for (int j = 1; j < i; j++)
+		{
+			if (arr[j] < arr[j-1])
+			{
+				swap(arr[j], arr[j-1]);
+				flag = 1;
+			}
+		}
+	}
+}
+
+// 进一步优化，假如数组有100个，后面90个都已排好序且都大于前面10个数字，
+//那么在第一趟遍历后，最后发生交换的位置必定小于10，且这个位置之后的数据必定已经有序了，
+//记录下这位置，第二次只要从数组头部遍历到这个位置就可以了。
+void BubbleSort2(int* arr, int len)
+{
+	assert(arr);
+	assert(len > 0);
+	int flag = len;
+	for (int i; flag;)
+	{
+		i = flag;
+		flag = 0;
+		for (int j = 1; j < i; j++)
+		{
+			if (arr[j] < arr[j - 1])
+			{
+				swap(arr[j], arr[j - 1]);
+				flag = j;
+			}
+		}
+	}
+}
+
+//快速排序
+
 void Test()
 {
 	int arr[] = { 5 ,8, 9, 4 };
 	InsertSort(arr, sizeof(arr) / sizeof(arr[0]));
 	int arr1[] = { 3, 1, 5, 2, 8, 7, 9, 0, 6, 4 };
+
 	ShellSort(arr1, sizeof(arr1) / sizeof(arr1[0]));
 	int arr2[] = { 3, 1, 5, 2, 8, 7, 9, 0, 6, 4 };
+
 	SelectSort(arr2, sizeof(arr2) / sizeof(arr2[0]));
+
 	int arr3[] = { 3, 1, 5, 2, 8, 7, 9, 0, 6, 4 };
 	HeapSort(arr3, sizeof(arr3) / sizeof(arr3[0]));
+
+	int arr4[] = { 3, 1, 5, 2, 8, 7, 9, 0, 6, 4 };
+	BubbleSort2(arr4, sizeof(arr4) / sizeof(arr4[0]));
 }
