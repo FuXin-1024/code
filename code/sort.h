@@ -1,9 +1,9 @@
-#include<iostream>
+ï»¿#include<iostream>
 #include<assert.h>
 using namespace std;
 
-//Ö±½Ó²åÈëÅÅÐò
-void InsertSort(int* arr, int len)//ÉýÐòÅÅÁÐ
+//ç›´æŽ¥æ’å…¥æŽ’åº
+void InsertSort(int* arr, int len)//å‡åºæŽ’åˆ—
 {
 	assert(arr);
 	assert(len > 0);
@@ -48,7 +48,7 @@ void ShellSort(int* arr, int len)
 	}
 }
 
-//Ñ¡ÔñÅÅÐò
+//é€‰æ‹©æŽ’åº
 void SelectSort(int* arr, int len)
 {
 	assert(arr > 0);
@@ -63,8 +63,8 @@ void SelectSort(int* arr, int len)
 	}
 }
 
-//¶ÑÅÅÐò
-//ÉýÐò½¨´ó¶Ñ
+//å †æŽ’åº
+//å‡åºå»ºå¤§å †
 
 void AdjustDown(int* heap, int n, int parent)
 {
@@ -91,7 +91,7 @@ void HeapSort(int* arr, int len)
 	int parent = (len - 2) >> 1;
 	for (; parent >= 0; --parent)
 		AdjustDown(arr, len, parent);
-	//¶Ñ¶¥Óë×îºóÒ»¸öÊý½»»»£¬³ý×îºóÒ»¸öÊý£¬µ÷Õû³É´ó¶Ñ¡£Ñ­»·¡£±£Ö¤Ã¿¸ö¶ÑµÄ×îºóÒ»¸öÊýÊÇ×î´óµÄ
+	//å †é¡¶ä¸Žæœ€åŽä¸€ä¸ªæ•°äº¤æ¢ï¼Œé™¤æœ€åŽä¸€ä¸ªæ•°ï¼Œè°ƒæ•´æˆå¤§å †ã€‚å¾ªçŽ¯ã€‚ä¿è¯æ¯ä¸ªå †çš„æœ€åŽä¸€ä¸ªæ•°æ˜¯æœ€å¤§çš„
 	for (int i = len - 1; i >= 0; --i)
 	{
 		swap(arr[0], arr[i]);
@@ -99,7 +99,7 @@ void HeapSort(int* arr, int len)
 	}
 }
 
-//Ã°ÅÝÅÅÐò
+//å†’æ³¡æŽ’åº
 void BubbleSort(int* arr, int len)
 {
 	assert(arr);
@@ -133,9 +133,9 @@ void BubbleSort1(int* arr, int len)
 	}
 }
 
-// ½øÒ»²½ÓÅ»¯£¬¼ÙÈçÊý×éÓÐ100¸ö£¬ºóÃæ90¸ö¶¼ÒÑÅÅºÃÐòÇÒ¶¼´óÓÚÇ°Ãæ10¸öÊý×Ö£¬
-//ÄÇÃ´ÔÚµÚÒ»ÌË±éÀúºó£¬×îºó·¢Éú½»»»µÄÎ»ÖÃ±Ø¶¨Ð¡ÓÚ10£¬ÇÒÕâ¸öÎ»ÖÃÖ®ºóµÄÊý¾Ý±Ø¶¨ÒÑ¾­ÓÐÐòÁË£¬
-//¼ÇÂ¼ÏÂÕâÎ»ÖÃ£¬µÚ¶þ´ÎÖ»Òª´ÓÊý×éÍ·²¿±éÀúµ½Õâ¸öÎ»ÖÃ¾Í¿ÉÒÔÁË¡£
+// è¿›ä¸€æ­¥ä¼˜åŒ–ï¼Œå‡å¦‚æ•°ç»„æœ‰100ä¸ªï¼ŒåŽé¢90ä¸ªéƒ½å·²æŽ’å¥½åºä¸”éƒ½å¤§äºŽå‰é¢10ä¸ªæ•°å­—ï¼Œ
+//é‚£ä¹ˆåœ¨ç¬¬ä¸€è¶ŸéåŽ†åŽï¼Œæœ€åŽå‘ç”Ÿäº¤æ¢çš„ä½ç½®å¿…å®šå°äºŽ10ï¼Œä¸”è¿™ä¸ªä½ç½®ä¹‹åŽçš„æ•°æ®å¿…å®šå·²ç»æœ‰åºäº†ï¼Œ
+//è®°å½•ä¸‹è¿™ä½ç½®ï¼Œç¬¬äºŒæ¬¡åªè¦ä»Žæ•°ç»„å¤´éƒ¨éåŽ†åˆ°è¿™ä¸ªä½ç½®å°±å¯ä»¥äº†ã€‚
 void BubbleSort2(int* arr, int len)
 {
 	assert(arr);
@@ -156,7 +156,43 @@ void BubbleSort2(int* arr, int len)
 	}
 }
 
-//¿ìËÙÅÅÐò
+//å½’å¹¶æŽ’åº
+void _MergeSort(int* src, int* dst, int left, int right)
+{
+	if (left >= right)
+		return;
+	int mid = left + (right - left) / 2;
+	//[left,mid],[mid+1,right]
+	_MergeSort(src, dst, left, mid);
+	_MergeSort(src, dst, mid + 1, right);
+
+	int begin1 = left; int begin2 = mid + 1;
+	int index = 0;
+	
+	while (begin1 <= mid && begin2 <= right)
+	{
+		if (src[begin1] < src[begin2])
+			dst[index++] = src[begin1++];
+		else
+			dst[index++] = src[begin2++];
+	}
+
+	while (begin1 <= mid)
+		dst[index++] = src[begin1++];
+	while (begin2 < right)
+		dst[index++] = src[begin2++];
+
+	int i = 0; int j = left;
+	while (i < index)
+		src[j++] = dst[i++];
+}
+void MergeSort(int* arr, int len)
+{
+	assert(arr);
+	assert(len > 0);
+	int *tmp = new int[len];
+	_MergeSort(arr, tmp, 0, len - 1);
+}
 
 void Test()
 {
@@ -174,4 +210,7 @@ void Test()
 
 	int arr4[] = { 3, 1, 5, 2, 8, 7, 9, 0, 6, 4 };
 	BubbleSort2(arr4, sizeof(arr4) / sizeof(arr4[0]));
+
+	int arr5[] = { 3, 1, 5, 2, 8, 7, 9, 0, 6, 4 };
+	MergeSort(arr5, sizeof(arr5) / sizeof(arr5[0]));
 }
