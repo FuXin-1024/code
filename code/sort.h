@@ -1,5 +1,7 @@
-﻿#include<iostream>
+﻿#pragma once 
+#include<iostream>
 #include<assert.h>
+#include<memory.h>
 using namespace std;
 
 //直接插入排序
@@ -66,7 +68,7 @@ void SelectSort(int* arr, int len)
 //堆排序
 //升序建大堆
 
-void AdjustDown(int* heap, int n, int parent)
+void AdjustDown(int* heap, int n, int parent)//向下调整
 {
 	int child = parent * 2 + 1;
 	while (child < n)
@@ -194,10 +196,161 @@ void MergeSort(int* arr, int len)
 	_MergeSort(arr, tmp, 0, len - 1);
 }
 
+int GetMidIndex(int* arr, int left, int right)//三数取中法
+{
+	assert(arr);
+	assert(left < right);
+
+	int mid = left + (right - left) / 2;
+
+	if (arr[left] < arr[mid])
+	{
+		if (arr[mid] < arr[right])
+			return mid;
+		else if (arr[left] > arr[right])
+			return left;
+		else
+			return right;;
+	}
+	else           //arr[left] > arr[mid]
+	{
+		if (arr[mid] > arr[right])
+			return mid;
+		else if (arr[right] > arr[left])
+			return left;
+		else
+			return right;
+	}
+}
+
+//左右指针法
+int PartSort1(int* arr, int left, int right)
+{
+	assert(arr);
+	assert(right > left);
+
+	int mid = GetMidIndex(arr, left, right);//三数取中
+	swap(arr[mid], arr[right]);
+	int key = arr[right];
+	int begin = left;
+	int end = right;
+
+	while (begin < end)
+	{
+		while (begin < end && arr[begin] <= key)//找大
+			++begin;
+
+		while (begin < end && arr[end] >= key)//找小
+			--end;
+
+		if (begin < end)
+			swap(arr[begin], arr[end]);
+	}
+	swap(arr[begin], arr[right]);
+	return begin;
+}
+
+//挖坑法
+int PartSort2(int *arr, int left, int right)
+{
+	assert(arr);
+	assert(left < right);
+
+	int key = arr[right];
+	while (left < right)
+	{
+		while (left < right && arr[left] <= key)
+			++left;
+		arr[right] = arr[left];
+
+		while (left < right && arr[right] >= key)
+			--right;
+		arr[left] = arr[right];
+	}
+
+	arr[left] = key;
+	return left;
+}
+
+//前后指针法
+int PartSort3(int* arr, int left, int right)
+{
+	assert(arr);
+	assert(left < right);
+
+	int mid = GetMidIndex(arr, left, right);
+	swap(arr[mid], arr[right]);
+
+	int cur = left;
+	int prev = left - 1;
+	int key = arr[right];
+
+	while (cur < right)
+	{
+		if (arr[cur] < key && ++prev != cur)
+			swap(arr[cur], arr[prev]);
+		++cur;
+	}
+	swap(arr[++prev], arr[right]);
+	return prev;
+}
+void QuickSort(int* a, int left, int right)
+{
+	assert(a);
+	if (left >= right)
+		return;
+
+	//小区间优化
+	/*if (right - left < 4)
+	{
+	InsertSort(a, right - left);
+	}*/
+	/*else
+	{
+	}*/
+	//int div = PartSort2(a, left, right);
+	int div = PartSort3(a, left, right);
+
+	QuickSort(a, left, div - 1);
+	QuickSort(a, div + 1, right);
+}
+
+void CountSort(int* arr, int len)
+{
+	assert(arr);
+	assert(len > 0);
+
+	int min = arr[0];
+	int max = arr[0];
+
+	for (int i = 1; i < len; i++)
+	{
+		if (arr[i]>max)
+			max = arr[i];
+		if (arr[i] < min)
+			min = arr[i];
+	}
+
+	int range = max - min + 1;
+	int* counts = new int(range);
+	memset(counts, 0, sizeof(int)*range);
+
+	for (int i = 0; i < len; i++)
+	{
+		counts[arr[i] - min]++;
+	}
+
+	int j = 0;
+	for (int i = 0; i < range; i++)
+	{
+		while (counts[i]--)
+			arr[j++] = i + min;
+	}
+}
 void Test()
 {
-	int arr[] = { 5 ,8, 9, 4 };
-	InsertSort(arr, sizeof(arr) / sizeof(arr[0]));
+	/*int arr[] = { 5 ,8, 9, 4 };*/
+	/*InsertSort(arr, sizeof(arr) / sizeof(arr[0]));
 	int arr1[] = { 3, 1, 5, 2, 8, 7, 9, 0, 6, 4 };
 
 	ShellSort(arr1, sizeof(arr1) / sizeof(arr1[0]));
@@ -209,8 +362,14 @@ void Test()
 	HeapSort(arr3, sizeof(arr3) / sizeof(arr3[0]));
 
 	int arr4[] = { 3, 1, 5, 2, 8, 7, 9, 0, 6, 4 };
-	BubbleSort2(arr4, sizeof(arr4) / sizeof(arr4[0]));
+	BubbleSort2(arr4, sizeof(arr4) / sizeof(arr4[0]));*/
 
-	int arr5[] = { 3, 1, 5, 2, 8, 7, 9, 0, 6, 4 };
+
+	/*int arr5[] = { 3, 1, 5, 2, 8, 7, 9, 0, 6, 4 };
 	MergeSort(arr5, sizeof(arr5) / sizeof(arr5[0]));
+	int arr6[] = { 3, 1, 5, 2, 8, 7, 9, 0, 6, 4 };
+	QuickSort(arr6, 0,sizeof(arr6) / sizeof(arr6[0])-1);*/
+
+	int arr7[] = { 3, 1, 5, 2, 8, 7, 9, 0, 6, 4 };
+	CountSort(arr7, sizeof(arr7) / sizeof(arr7[0]));
 }
