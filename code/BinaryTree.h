@@ -34,7 +34,7 @@ public:
 		_root = _Copy(t._root);
 	}
 
-	//��ͳ
+	//传统
 	BinaryTree<T>& operator=(const BinaryTree<T>& t)
 	{
 		if (this != &t)
@@ -45,8 +45,80 @@ public:
 		}
 		return *this;
 	}
+	//现代
+	/*BinaryTree<T>& operator=(const BinaryTree<T> t)
+	{
+		swap(_root, t._root);
+		return *this;
+	}*/
+
+	BinaryTree(T* a, size_t n, const T& invalid = T())
+	{
+		size_t index = 0;
+		_root = CreateTree(a, n, invalid, index);
+	}
+
+	//前序遍历
+	void PrevOrder()
+	{
+		_PrevOrder(_root);
+	}
+
+	//中序遍历
+	void InOrder()
+	{
+		_InOrder(_root);
+	}
+
+	//后序遍历
+	void PostOrder()
+	{
+		_PostOrder(_root);
+	}
 
 protected:
+	Node* CreateTree(T* a, size_t n, const T& invalid, size_t& index)
+	{
+		Node* root = NULL;
+		if (index < n && a[index] != invalid)
+		{
+			root = new Node(a[index]);
+			root->_left = Create(a, n, invalid, ++index);
+			root->_right = CreateTree(a, n, invalid, ++index);
+		}
+		return root;
+	}
+
+	void _PrevOrder(Node* root)
+	{
+		if (root == NULL)
+			return 
+		
+		cout << root->_data << " ";
+		_PrevOrder(root->_left);
+		_PrevOrder(root->_right);
+	}
+
+	void _InOrder(Node* root)
+	{
+		if (root == NULL)
+			return ;
+
+		_InOrder(root->_left);
+		cout << root->_data << " ";
+		_InOrder(root->_right);
+	}
+
+	void _PostOrder(Node* root)
+	{
+		if (root == NULL)
+			return;
+
+		_PostOrder(root->_left);
+		_PsotOrder(root->_right);
+		cout << root->_data << " ";
+	}
+
 	void _Destroy(Node* root)
 	{
 		if (root == NULL)
