@@ -1,4 +1,5 @@
 #include<iostream>
+#include<stack>
 using namespace std;
 
 template <class T>
@@ -64,18 +65,86 @@ public:
 		_PrevOrder(_root);
 	}
 
+	void PrevOrderNonR()
+	{
+		Node* cur = _root;
+		stack<Node*> s;
+		while (cur || !s.empty())
+		{
+			while (cur)
+			{
+				s.push(cur);
+				cout << cur->_data << " ";
+				cur = cur->_left;
+			}
+			Node* top = s.top();
+			s.pop();
+			cur = top->_right;
+		}
+	}
+
 	//中序遍历
 	void InOrder()
 	{
 		_InOrder(_root);
 	}
 
+	void InOrderNonR()
+	{
+		stack<Node*> s;
+		Node* cur = _root;
+		while (cur || !s.empty())
+		{
+			while (cur)
+			{
+				s.push(cur);
+				cur = cur->_left;
+			}
+			Node* top = s.top();
+			cout << top->_data << " ";
+			s.pop();
+			cur = top->_right;
+		}
+	}
 	//后序遍历
 	void PostOrder()
 	{
 		_PostOrder(_root);
 	}
 
+	void PostOrderNonR()
+	{
+		stack<Node*> s;
+		Node* cur = _root;
+		Node* prev = NULL;
+
+		while (cur || !s.empty())
+		{
+			while (cur)
+			{
+				s.push(cur);
+				cur = cur->_left;
+			}
+
+			Node* top = s.top();
+			if (top->_right == NULL || top->_right == prev)
+			{
+				cout << top->_data << " ";
+				prev = top;
+				s.pop();
+			}
+			else
+			{
+				cur = top->_right;
+			}
+		}
+	}
+
+	//层序遍历
+	void LevelOrder()
+	{
+		_LevelOrder(_root);
+	}
 protected:
 	Node* CreateTree(T* a, size_t n, const T& invalid, size_t& index)
 	{
@@ -83,7 +152,7 @@ protected:
 		if (index < n && a[index] != invalid)
 		{
 			root = new Node(a[index]);
-			root->_left = Create(a, n, invalid, ++index);
+			root->_left = CreateTree(a, n, invalid, ++index);
 			root->_right = CreateTree(a, n, invalid, ++index);
 		}
 		return root;
@@ -92,7 +161,7 @@ protected:
 	void _PrevOrder(Node* root)
 	{
 		if (root == NULL)
-			return 
+			return;
 		
 		cout << root->_data << " ";
 		_PrevOrder(root->_left);
@@ -115,7 +184,7 @@ protected:
 			return;
 
 		_PostOrder(root->_left);
-		_PsotOrder(root->_right);
+		_PostOrder(root->_right);
 		cout << root->_data << " ";
 	}
 
@@ -144,3 +213,18 @@ protected:
 private:
 	Node* _root;
 };
+
+void BinaryTreeTest()
+{
+	int  a[] = { 1, 2, 3, '#', '#', 4, '#', '#', 5, 6 };
+	BinaryTree  <int> t(a, sizeof(a) / sizeof(a[0]), '#');
+	
+	cout << "PrevOrde "; t.PrevOrder(); cout << endl;
+	cout << "PrevOrdeNonR "; t.PrevOrderNonR(); cout << endl;
+
+	cout << "InOrder "; t.InOrder(); cout << endl;
+	cout << "InOrderNonR "; t.InOrderNonR(); cout << endl;
+
+	cout << "PostOrde "; t.PostOrder(); cout << endl;
+	cout << "PostOrdeNonR "; t.PostOrderNonR(); cout << endl;
+}
