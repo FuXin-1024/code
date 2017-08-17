@@ -1,5 +1,6 @@
 #include<iostream>
 #include<stack>
+#include<queue>
 using namespace std;
 
 template <class T>
@@ -145,6 +146,17 @@ public:
 	{
 		_LevelOrder(_root);
 	}
+
+	size_t Size()
+	{
+		return _Size(_root);
+	}
+
+	//叶子节点数
+	size_t GetLeafSize()
+	{
+		return  _GetLeafSize(_root);
+	}
 protected:
 	Node* CreateTree(T* a, size_t n, const T& invalid, size_t& index)
 	{
@@ -188,6 +200,48 @@ protected:
 		cout << root->_data << " ";
 	}
 
+	void _LevelOrder(Node* root)
+	{
+		if (root == NULL)
+			return;
+
+		queue<Node*> q;
+		q.push(root);
+
+		while (!q.empty())
+		{
+			Node* front = q.front();
+			cout << front->_data << " ";
+			q.pop();
+
+			if (front->_left)
+				q.push(front->_left);
+			if (front->_right)
+				q.push(front->_right);
+		}
+	}
+
+	size_t _Size(Node* root)
+	{
+		if (root == NULL)
+			return 0;
+
+		return _Size(root->_left) + _Size(root->_right) + 1;
+	}
+
+	size_t _GetLeafSize(Node* root)
+	{
+		if (root == NULL)
+			return 0;
+
+		if (root->_left == NULL && root->_right == NULL)
+			return 1;
+
+		return _GetLeafSize(root->_left) + _GetLeafSize(root->_right);
+	}
+
+
+
 	void _Destroy(Node* root)
 	{
 		if (root == NULL)
@@ -227,4 +281,10 @@ void BinaryTreeTest()
 
 	cout << "PostOrde "; t.PostOrder(); cout << endl;
 	cout << "PostOrdeNonR "; t.PostOrderNonR(); cout << endl;
+
+	cout << "LevelOrder "; t.LevelOrder(); cout << endl;
+
+	cout << "Size = ";  cout << t.Size()<< endl;
+
+	cout << "LeafSize = ";  cout << t.GetLeafSize() << endl;
 }
