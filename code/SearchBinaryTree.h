@@ -96,6 +96,88 @@ public:
 		return NULL;
 	}
 
+	bool Remove(const K& key)
+	{
+		if (_root == NULL)
+
+			return false;
+		Node* cur = _root;
+		Node* parent = NULL;
+
+		while (cur)
+		{
+			if (cur->_key < key)
+			{
+				parent = cur;
+				cur = cur->_right;
+			}
+			else if (cur->_key>key)
+			{
+				parent = cur;
+				cur = cur->_left;
+			}
+			else //找到了
+			{
+				Node* del = cur;
+				//假如没有左子树
+				if (cur->_left == NULL)
+				{
+					//没有左子树的根节点
+					if (_root->_key == key)
+					{
+						_root = cur->_right;
+						delete del;
+						return true;
+					}
+					if (parent->_right == cur)
+						parent->_right = cur->_right;
+					else
+						parent->_left = cur->_right;
+				}
+				//没有右子树
+				else if (cur->_right == NULL)
+				{
+					//没有右子树的根节点
+					if (_root->_key == key)
+					{
+						_root = cur->_left;
+						delete del;
+						return true;
+					}
+					if (parent->_right == cur)
+					{
+						parent->_right = cur->_left;
+					}
+					else
+						parent->_left = cur->_left;
+				}
+				//既有左子树又有右子树
+				else
+				{
+					//替换
+					//右子树的最左节点，左子树的最右节点
+					Node* subRight = cur->_right;
+					Node* subParent = cur;
+
+					while (subRight->_left)
+					{
+						subParent = subRight;
+						subRight = subRight->_left;
+					}
+					cur->_key = subRight->_key;
+					del = subRight;
+					if (subParent->_left == subRight)
+						subParent->_left = subRight->_right;
+					else
+						subParent->_right = subRight->_right;
+				}
+				delete del;
+				return true;
+			}
+		}
+		return false;
+	}
+
 	const Node* FindR(const K& key)
 	{
 		return _FindR(_root, key);
@@ -203,4 +285,6 @@ void Test()
 	cout << s.FindR(8)->_key << endl;
 	cout << s.FindR(9)->_key << endl;
 	cout << s.FindR(11) << endl;*/
+	s.Remove(5);
+	s.InOrder(); cout << endl;
 }
