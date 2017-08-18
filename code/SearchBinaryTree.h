@@ -178,6 +178,11 @@ public:
 		return false;
 	}
 
+	bool RemoveR(const K&  key)
+	{
+		return _RemoveR(_root, key);
+	}
+
 	const Node* FindR(const K& key)
 	{
 		return _FindR(_root, key);
@@ -233,6 +238,45 @@ protected:
 		}
 	}
 
+	bool _RemoveR(Node*& root,const K& key)
+	{
+		if (root == NULL)
+			return false;
+
+		if (root->_key < key)
+			return _RemoveR(root->_right, key);
+		else if (root->_key > key)
+			return _RemoveR(root->_left, key);
+
+		else
+		{
+			Node* del = root;
+			if (root->_left == NULL)
+				root = root->_right;
+			else if (root->_right == NULL)
+				root = root->_left;
+			else
+			{
+				Node* subParent = root;
+				Node* subRight = root->_right;
+				while (subRight->_left)
+				{
+					subParent = subRight;
+					subRight = subRight->_left;
+				}
+
+				swap(subRight->_key, subParent->_key);
+				del = subRight;
+				if (subParent->_left == subRight)
+					subParent->_left = subRight->_right;
+				else
+					subParent->_right = subRight->_right;
+			}
+			delete del;
+			return true;
+		}
+	}
+
 	void _Destroy(Node* root)
 	{
 		if (root == NULL)
@@ -285,6 +329,8 @@ void Test()
 	cout << s.FindR(8)->_key << endl;
 	cout << s.FindR(9)->_key << endl;
 	cout << s.FindR(11) << endl;*/
-	s.Remove(5);
+	/*s.Remove(5);
+	s.InOrder(); cout << endl;*/
+	s.RemoveR(1);
 	s.InOrder(); cout << endl;
 }
