@@ -80,14 +80,14 @@ public:
 			cur->_parent = parent;
 		}
 
-		//ÅÐ¶Ï²åÈëµÄ¼¸ÖÖÇé¿ö
+		//åˆ¤æ–­æ’å…¥çš„å‡ ç§æƒ…å†µ
 		while (parent && parent->_color == RED)
 		{
 			Node* grandfather = parent->_parent;
 			if (parent == grandfather->_left)
 			{
 				Node* uncle = grandfather->_right;
-				//ÊåÊå´æÔÚÇÐÎªºì
+				//å”å”å­˜åœ¨åˆ‡ä¸ºçº¢
 				if (uncle && uncle->_color == RED)
 				{
 					parent->_color = uncle->_color = BLACK;
@@ -95,9 +95,9 @@ public:
 					cur = grandfather;
 					parent = cur->_parent;
 				}
-				else //ÊåÊå²»´æÔÚ»òÕß´æÔÚÎªºÚ
+				else //å”å”ä¸å­˜åœ¨æˆ–è€…å­˜åœ¨ä¸ºé»‘
 				{
-					//Ë«Ðý
+					//åŒæ—‹
 					if (cur == parent->_right)
 					{
 						RotateL(parent);
@@ -109,11 +109,11 @@ public:
 					break;
 				}
 			}
-			//¸¸Ç×ÊÇÓÒ¶ù×Ó£¬ÊåÊåÔÚ×ó±ß
+			//çˆ¶äº²æ˜¯å³å„¿å­ï¼Œå”å”åœ¨å·¦è¾¹
 			else
 			{
 				Node* uncle = grandfather->_left;
-				//ÊåÊå´æÔÚÇÒÎªºì
+				//å”å”å­˜åœ¨ä¸”ä¸ºçº¢
 				if (uncle && uncle->_color == RED)
 				{
 					parent->_color = uncle->_color = BLACK;
@@ -121,23 +121,28 @@ public:
 					cur = grandfather;
 					parent = cur->_parent;
 				}
-				//ÊåÊå²»´æÔÚ£¬»ò´æÔÚÎªºÚ
+				//å”å”ä¸å­˜åœ¨ï¼Œæˆ–å­˜åœ¨ä¸ºé»‘
 				else
 				{
-					if (cur = parent->left)
+					if (cur == parent->_left)
 					{
 						RotateR(parent);
 						swap(parent, cur);
 					}
-					RotateL(grandfatehr);
-					parent->_color = BLOCK;
+					RotateL(grandfather);
+					parent->_color = BLACK;
 					grandfather->_color = RED;
 					break;
 				}
 			}
 		}
-		_root->_color = BLOCK;
+		_root->_color = BLACK;
 		return true;
+	}
+
+	void InOrder()
+	{
+		_InOrder(_root);
 	}
 protected:
 	void RotateR(Node* parent)
@@ -172,6 +177,34 @@ protected:
 		}
 	}
 
+	void RotateL(Node* parent)
+	{
+		Node* subR = parent->_right;
+		Node* subRL = subR->_left;
+		parent->_right = subRL;
+		if (subRL)
+		{
+			subRL->_parent = parent;
+		}
+		Node* ppNode = parent->_parent;
+		subR->_left = parent;
+		parent->_parent=subR;
+		if (ppNode == NULL)
+		{
+			_root = subR;
+			_root->_parent = NULL;
+		}
+		else
+		{
+			if (ppNode->_left == parent)
+				ppNode->_left = subR;
+			else
+				ppNode->_right = subR;
+			subR->_parent = ppNode;
+		}
+
+	}
+
 	void _Destroy(Node* root)
 	{
 		if (root == NULL)
@@ -180,6 +213,31 @@ protected:
 		_Destroy(root->_right);
 		delete root;
 	}
+
+	void _InOrder(Node* root)
+	{
+		if (root == NULL)
+			return;
+		_InOrder(root->_left);
+		cout << root->_key << " ";
+		_InOrder(root->_right);
+	}
+
 private:
 	Node* _root;
 };
+
+
+void Test()
+{
+	RBTree<int, int> t1;
+	int a[] = { 16, 3, 7, 11, 9, 26, 18, 14, 15, 9, 3 };
+	for (size_t i = 0; i < sizeof(a) / sizeof(a[0]); ++i)
+	{
+		t1.Insert(a[i], i);
+	}
+	t1.InOrder(); cout << endl;
+	/*cout << t1.IsBlance() << endl;*/
+}
+
+
