@@ -140,11 +140,130 @@ string StrSub(string left, string right)
 		return ret;
 	}
 }
+void  RemoveZero(string& str)
+{
+	if (str.empty())
+		return ;
+	char symbol =str[0];
+	char *p = (char*)str.c_str();
+	p++;
+	while (*p == '0')
+		p++;
+	string ret;
+	ret.resize(strlen(p) + 1);
+	ret[0] = symbol;
+	int count = 1;
+	while (*p != '\0')
+	{
+		ret[count++] = *p;
+		p++;
+	}
+	str = ret;
+}
+string mul(string left, char right)
+{
+	if (right == '0')
+		return "+0";
+	int l = left.size();
+	int r = 1;
+
+	string strRes;
+	strRes.resize(l + 1, '0');
+	int idx;
+	int step = 0;//进位
+	for (idx = 1; idx < l; idx++)
+	{
+		int tmp = (left[l - idx] - '0')*(right - '0');
+		step = tmp / 10;
+		tmp = tmp % 10;
+
+		strRes[l - idx + 1] = tmp + (strRes[l - idx + 1] - '0') + '0';
+		strRes[l - idx] = step + '0';
+	}
+	return strRes;
+}
+string StrMul(string left, string right)
+{
+	int l = left.size();
+	int r = right.size();
+	if (l < r)
+	{
+		left.swap(right);
+		swap(l, r);
+	}
+
+	string strRes;
+	strRes.resize(1);
+
+	int idx = 1;
+	for (; idx < l; idx++)
+	{
+		string tmp = mul(right, left[l - idx]);
+		for (int i = idx; i>1; i--)
+		{
+			tmp.append("0");
+		}
+		strRes = StrAdd(tmp, strRes);
+	}
+	if (left[0] != right[0])
+		strRes[0] = '-';
+	else
+		strRes[0] = '+';
+	/*string ret = RemoveZero(strRes);*/
+	RemoveZero(strRes);
+	return strRes;
+}
+
+string StrDiv(string left, string right)
+{
+	int l = left.size();
+	int r = right.size();
+	string strRes;
+	strRes.resize(l);
+	char symbol = '+';
+	if (left[0] != right[0])
+		symbol = '-';
+
+	//符号统一
+	left[0] = '+';
+	right[0] = '+';
+
+	int ret = 1;
+	int idx = 1;
+	string data("+");
+	for (; idx < l; idx++)
+	{
+		data.push_back(left[idx]);
+		if (!IsLeftBig(data, right))
+		{
+			strRes[ret++] = '0';
+			continue;
+		}
+		int count = 0;
+		while (1)
+		{
+			if (!IsLeftBig(data, right))  //左操作数小
+			{
+				break;
+			}
+			count++;
+			data = StrSub(data, right);
+			RemoveZero(data);
+		}
+		//走到这，确定了商的一位;
+		strRes[ret++] = count + '0';
+		if (data == "+0")  //处理掉，余数是零的情况，"+0" -->"+"  达到重置Ldata 的作用;
+			data.resize(1);
+	}
+	strRes[0] = symbol;
+	RemoveZero(strRes);
+	return strRes;
+}
 int main()
 {
-	string left = "-345";
-	string right = "-89";
-	string ret = StrSub(left, right);
+	string left = "-3456";
+	string right = "+89";
+	string ret = StrDiv(left, right);
 	
 
 	system("pause");
